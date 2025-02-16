@@ -1,39 +1,33 @@
+// NIM  : 10121142
+// Nama : Asifa Lestari
+// Tugas Convert MVC ke MVVM
+
 package ac.id.unikom.challenge;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-public class MainActivity extends AppCompatActivity implements MainView{
+public class MainActivity extends AppCompatActivity {
 
     private EditText meter;
     private EditText kilometer;
     private EditText centimeter;
-    private MainController controller;
-    private Meter model;
+    private MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        controller = new MainController(this);
-        model = Meter.getInstance();
+
+        // Inisialisasi ViewModel
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         initView();
-        observeModel();
-    }
-
-    private void observeModel() {
-        model.getCentimeter().observe(this, centimeter -> {
-            this.centimeter.setText(centimeter);
-        });
-
-        model.getKilometer().observe(this, kilometer -> {
-            this.kilometer.setText(kilometer);
-        });
+        observeViewModel();
     }
 
     private void initView() {
@@ -43,31 +37,27 @@ public class MainActivity extends AppCompatActivity implements MainView{
 
         meter.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-                controller.calculateLength();
+            public void afterTextChanged(Editable s) {
+                viewModel.calculateLength(meter.getText().toString());
             }
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        controller = null;
-        Meter.destroy();
-        super.onDestroy();
-    }
+    private void observeViewModel() {
+        viewModel.getKilometer().observe(this, km -> {
+            kilometer.setText(km);
+        });
 
-    @Override
-    public String getMeter() {
-        return meter.getText().toString();
+        viewModel.getCentimeter().observe(this, cm -> {
+            centimeter.setText(cm);
+        });
     }
 }

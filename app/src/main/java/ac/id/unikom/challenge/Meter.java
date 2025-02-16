@@ -1,3 +1,7 @@
+// NIM  : 10121142
+// Nama : Asifa Lestari
+// Tugas Convert MVC ke MVVM
+
 package ac.id.unikom.challenge;
 
 import androidx.lifecycle.LiveData;
@@ -7,7 +11,6 @@ public class Meter {
     private static Meter instance;
 
     private double meter;
-
     private MutableLiveData<String> kilometer;
     private MutableLiveData<String> centimeter;
 
@@ -21,7 +24,6 @@ public class Meter {
         if (instance == null) {
             instance = new Meter();
         }
-
         return instance;
     }
 
@@ -42,12 +44,12 @@ public class Meter {
     }
 
     public void toKilometer() {
-        double kilometer =  meter / 1000;
-        this.kilometer.postValue(kilometer + "");
+        double kilometerValue = meter / 1000;
+        this.kilometer.postValue(String.valueOf(kilometerValue));
     }
 
     public void toCentimeter() {
-        double centimeter =  meter * 100;
-        this.centimeter.postValue(centimeter + "");
+        double centimeterValue = meter * 100;
+        this.centimeter.postValue(String.valueOf(centimeterValue));
     }
 }
